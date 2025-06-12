@@ -5,6 +5,10 @@ function exit() {
     term.disable();
 }
 
+const Data = new Map();
+Data.set("a", "Option a");
+Data.set("b", "Option b");
+
 // ref: https://stackoverflow.com/q/67322922/387194
 let __EVAL = (s) => eval(`void (__EVAL = ${__EVAL}); ${s}`);
 const sound = new Audio('https://cdn.jsdelivr.net/gh/jcubic/static@master/assets/mech-keyboard-keystroke_3.mp3')
@@ -15,6 +19,8 @@ const term = $('#terminal').terminal(function(command, term) {
         exit();
     } else if (cmd.name === 'echo') {
         term.echo(cmd.rest);
+    } else if (Data.has(cmd.name)) {
+        term.echo(Data.get(cmd.name));
     } else if (command !== '') {
         try {
             var result = __EVAL(command);
