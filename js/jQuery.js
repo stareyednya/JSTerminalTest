@@ -170,4 +170,3 @@ async function pictuteInPicture() {
 function clear() {
     term.clear();
 }
-cssVars(); // ponyfill
