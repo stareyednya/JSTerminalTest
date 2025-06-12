@@ -1,3 +1,8 @@
+const font = 'Slant';
+
+figlet.defaults({ fontPath: 'https://cdn.jsdelivr.net/npm/figlet/fonts' });
+figlet.preloadFonts([font], ready);
+
 const scanlines = $('.scanlines');
 const tv = $('.tv');
 function exit() {
@@ -38,6 +43,7 @@ const term = $('#terminal').terminal(function(command, term) {
 }, {
     name: 'js_demo',
     onResize: set_size,
+    greetings: false,
     exit: false,
     // detect iframe codepen preview
     enabled: $('body').attr('onload') === undefined,
@@ -175,6 +181,42 @@ async function pictuteInPicture() {
 }
 function clear() {
     term.clear();
+}
+
+function ready() {
+    const seed = rand(256);
+    term.echo(() => rainbow(render('Firmament'), seed))
+        .echo('<white>Welcome to Terminal Website Template</white>\n').resume();
+}
+
+function rainbow(string, seed) {
+    return lolcat.rainbow(function(char, color) {
+        char = $.terminal.escape_brackets(char);
+        return `[[;${hex(color)};]${char}]`;
+    }, string, seed).join('\n');
+}
+
+function rand(max) {
+    return Math.floor(Math.random() * (max + 1));
+}
+
+function render(text) {
+    const cols = term.cols();
+    return trim(figlet.textSync(text, {
+        font: font,
+        width: cols,
+        whitespaceBreak: true
+    }));
+}
+
+function trim(str) {
+    return str.replace(/[\n\s]+$/, '');
+}
+
+function hex(color) {
+    return '#' + [color.red, color.green, color.blue].map(n => {
+        return n.toString(16).padStart(2, '0');
+    }).join('');
 }
 
 cssVars(); // ponyfill
